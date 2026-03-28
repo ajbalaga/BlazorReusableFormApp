@@ -1,0 +1,40 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using BlazorReusableFormApp.Models
+@inject IJSRuntime JS
+
+<PageTitle>UserFormPage</PageTitle>
+
+<div class="page-center">
+    <div class="form-card">
+
+        <div class="form-title">User Information</div>
+        <div class="form-subtitle">Please complete the details below</div>
+
+        <UserFormPage Model="User"
+                  SubmitButtonText="Submit Information"
+                  IsSubmitting="IsSubmitting"
+                  OnSubmit="HandleSubmit" />
+
+    </div>
+</div>
+
+@code {
+    private UserModel User = new();
+    private bool IsSubmitting;
+
+    private async Task HandleSubmit(UserModel submitted)
+    {
+        IsSubmitting = true;
+
+        await Task.Delay(300);
+
+        await JS.InvokeVoidAsync(
+            "alert",
+            "✅ Your information has been successfully submitted!"
+        );
+
+        User = new(); // reset form
+        IsSubmitting = false;
+    }
+}

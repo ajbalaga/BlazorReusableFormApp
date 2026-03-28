@@ -1,0 +1,64 @@
+﻿@using BlazorReusableFormApp.Models
+
+<EditForm Model="Model"
+          FormName="UserInformationForm"
+          OnValidSubmit="HandleSubmit">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Name</label>
+        <InputText class="form-control" @bind-Value="Model.Name" />
+        <ValidationMessage For="@(() => Model.Name)" />
+    </div>
+
+    <div class="form-group">
+        <label>Address</label>
+        <InputText class="form-control" @bind-Value="Model.Address" />
+        <ValidationMessage For="@(() => Model.Address)" />
+    </div>
+
+    <div class="form-group">
+        <label>Age</label>
+        <InputNumber class="form-control"
+                     @bind-Value="Model.Age"
+                     min="1"
+                     max="120" />
+        <ValidationMessage For="@(() => Model.Age)" />
+    </div>
+
+    <div class="form-group">
+        <label>Email Address</label>
+        <InputText type="email"
+                   class="form-control"
+                   @bind-Value="Model.Email" />
+        <ValidationMessage For="@(() => Model.Email)" />
+    </div>
+
+    <button class="btn-primary"
+            type="submit"
+            disabled="@IsSubmitting">
+        @SubmitButtonText
+    </button>
+
+</EditForm>
+
+@code {
+    [Parameter, EditorRequired]
+    public UserModel Model { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<UserModel> OnSubmit { get; set; }
+
+    [Parameter]
+    public bool IsSubmitting { get; set; }
+
+    [Parameter]
+    public string SubmitButtonText { get; set; } = "Submit";
+
+    private async Task HandleSubmit()
+    {
+        await OnSubmit.InvokeAsync(Model);
+    }
+}
